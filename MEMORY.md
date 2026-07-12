@@ -1,0 +1,14 @@
+- [발행용 노트북 + 호칭/말투](user_publishing_notebook.md) — 이 PC=발행 노트북, 호칭=대표님, 존댓말, bypassPermissions 적용
+- [BlogPublisher v43 노트북 배포](project_blog_publisher_notebook.md) — EXE는 ~/Downloads/BlogPublisher_v43, 2026-05-07 config.json user_data_dir 수정(PC→장영훈), 소스는 본 PC F드라이브
+- [Edge 강제 종료 금지](feedback_no_force_kill_edge.md) — Stop-Process -Force msedge → 다음 launch 때 유령 탭 복원. Sessions 파일 삭제로 청소
+- [마스터 메모리 레포](reference_master_memory_repo.md) — vvgg56/claude-memory (private), ~/Desktop/claude-memory에 클론. 발행봇 등 일반 컨텍스트는 마스터 우선 참조
+- [VS Code 확장 bypass 권한 함정](reference_vscode_extension_bypass_permissions.md) — 이 노트북=VS Code 확장. bypass는 ~/.claude/settings.json 아니라 VS Code 설정 claudeCode.allowDangerouslySkipPermissions+initialPermissionMode가 지배. 적용=창 리로드
+- [🔴 노트북 Edge 프로필 매핑 불일치](reference_notebook_edge_profile_mapping_mismatch.md) — config profile_to_blog ≠ 노트북 실제 로그인. Profile 1=gmm0301(joywater2 아님). 발행 전 실제 매핑 확인 필수(_identify_profile.py)
+- [🔴🔴 VPN 없으면 네이버 로그인 금지](feedback_vpn_required_before_naver_login.md) — 보호조치 진짜 원인=맨 IP 발행. _launch_blog 게이트(v1.1.24), 체크박스보다 우선, vpn_id 없으면 엣지 안 엶
+- [blog.jgluna 대시보드 원격제어 + 서버/divergence](reference_blog_dashboard_remote_control.md) — vvgg56/blog-dashboard, 서버 3.38.22.7(키 ~/.ssh/Lightsail...pem), /remote 원격발행, repo↔서버 어긋남(전체배포 금지·patch만)
+- [TabPublisher v1.1.32 현재상태 + write.jgluna 글자깨짐 미해결](reference_tabpublisher_v132.md) — 2건회차/서식/시스템문자청소/엣지→VPN순서/원격, 보호 14개. U+FFFD 근본=write.jgluna 생성
+- [blog.jgluna 30일 발행쿨다운 카테고리](reference_dashboard_cooldown_categories.md) — 고시원4지점+삐딱(요식업)·우삼집. blog_data.json business 빈값→제목키워드(detect_biz_keyword)로 탐지(삐딱맛집≠가맹모집), 날짜없는 과거글은 RSS로 복구
+- [blog.jgluna 제목 생성 알고리즘](reference_dashboard_generation_algo.md) — 정보:전환 비율 '일간(그날전체)' 기준(c03b5b0), rank.jgluna.com 순위기반 전환글 제목 전환사업체 확대(상위 미달 키워드 우선, b1c42b7). eunsilto4021·goldenlady73 제거됨
+- [인용구(소제목) 기능 이식 분석 — GO 권장](reference_tabpublisher_quote_feature_port.md) — 직원 인용구 프로그램(Pictures/블덱스라이터_확장프로그램)을 TabPublisher로 이식 가능. 우리 소제목="N. 소제목" 딱맞음, 폴백 안전, 실기기 1건만 확인. 미구현·대표님 승인 대기(추천: 기본끔·따옴표·자동)
+- [🔴🔴 Edge 150 디버그포트 차단→발행0 + 정션 해결](reference_edge150_debugport_block.md) — Edge 7/4밤 150 자동업뎃, 기본 User Data폴더 --remote-debugging-port 무시→"돌아가나 미발행". fix=정션 C:\EdgeBotData→User Data + config user_data_dir 변경 + GUI재시작. 정션 rmdir -Recurse 금지
+- [🔴 TabPublisher 보호조치 34/36 원인 감사(2026-07-06)](reference_tabpublisher_protection_root_cause.md) — 고정IP 실증(공유IP 반증), 원인=맨IP 노출 3경로(최초로그인탭 require_vpn=False 실증9건·단일③ 우회·발행중 VPN사망)+계정검증 소실(blog_to_naver_id 미사용). 개선안=최초로그인 VPN강제·단일③재검증·계정별 기대IP맵·verify재이식
