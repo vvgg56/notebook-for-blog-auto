@@ -9,6 +9,7 @@
 - [TabPublisher v1.1.32 현재상태 + write.jgluna 글자깨짐 미해결](reference_tabpublisher_v132.md) — 2건회차/서식/시스템문자청소/엣지→VPN순서/원격, 보호 14개. U+FFFD 근본=write.jgluna 생성
 - [blog.jgluna 30일 발행쿨다운 카테고리](reference_dashboard_cooldown_categories.md) — 고시원4지점+삐딱(요식업)·우삼집. blog_data.json business 빈값→제목키워드(detect_biz_keyword)로 탐지(삐딱맛집≠가맹모집), 날짜없는 과거글은 RSS로 복구
 - [blog.jgluna 제목 생성 알고리즘](reference_dashboard_generation_algo.md) — 정보:전환 비율 '일간(그날전체)' 기준(c03b5b0), rank.jgluna.com 순위기반 전환글 제목 전환사업체 확대(상위 미달 키워드 우선, b1c42b7). eunsilto4021·goldenlady73 제거됨
+- [🆕 노트북 엘리트아이피 GUI v1.2.1 빌드·배포](reference_notebook_elite_gui_deploy.md) — ESvpn→엘리트 전환. TabPublisher Elite는 이미 blog-publisher main에 있음(pull). build_tab_gui.bat APP_NAME=TabPublisherEliteGUI_v1.2.1 빌드→Pictures\blog용GUI_v1.2.1 교체. 실동작 전 필요: ①엘리트IP매니저 설치 ②config elite.rows/blog_ips 충전. v1.2.1=양방향탐색(IP만료 목록밀림 자동복구)
 - [인용구(소제목) 기능 이식 분석 — GO 권장](reference_tabpublisher_quote_feature_port.md) — 직원 인용구 프로그램(Pictures/블덱스라이터_확장프로그램)을 TabPublisher로 이식 가능. 우리 소제목="N. 소제목" 딱맞음, 폴백 안전, 실기기 1건만 확인. 미구현·대표님 승인 대기(추천: 기본끔·따옴표·자동)
 - [🔴🔴 Edge 150 디버그포트 차단→발행0 + 정션 해결](reference_edge150_debugport_block.md) — Edge 7/4밤 150 자동업뎃, 기본 User Data폴더 --remote-debugging-port 무시→"돌아가나 미발행". fix=정션 C:\EdgeBotData→User Data + config user_data_dir 변경 + GUI재시작. 정션 rmdir -Recurse 금지
 - [🔴 TabPublisher 보호조치 34/36 원인 감사(2026-07-06)](reference_tabpublisher_protection_root_cause.md) — 고정IP 실증(공유IP 반증), 원인=맨IP 노출 3경로(최초로그인탭 require_vpn=False 실증9건·단일③ 우회·발행중 VPN사망)+계정검증 소실(blog_to_naver_id 미사용). 개선안=최초로그인 VPN강제·단일③재검증·계정별 기대IP맵·verify재이식
