@@ -46,3 +46,7 @@ metadata:
 - ✅ **해결은 이미 내장**: GUI exe는 `uac_admin=True`(스펙) + `_ensure_admin()`(tab_gui.py, ShellExecute runas 재실행)로 **자동 관리자 실행**. 배포 exe에 `requireAdministrator` 매니페스트 확인됨. 관리자 GUI → 관리자 매니저 조종 OK = 다른 PC와 동일. **대표님은 GUI를 그냥 실행(UAC 승인)하면 됨**.
 - 이 리스트뷰(ListView20WndClass)는 WS_VSCROLL 안 씀→GetScrollInfo/LVM_* 전부 0 반환(항목수·스크롤 못 읽음, 있어도 무시). 판독은 Config.ini 로.
 - 화면배율 125% 노트북 → 프로그램 캡처는 반드시 DPI 인식(SetProcessDpiAwarenessContext(-4)) 후 GetWindowRect/ImageGrab, 안 그럼 축소좌표(754px)로 잡혀 10개만 보임.
+
+**2026-07-17 🔴 배포 폴더 영구 고정 (대표님 지시 "빌드할때마다 다른곳에 두지 마")**: 배포 위치는 버전 무관 항상 **`C:\Users\장영훈\Pictures\blog용GUI`** 하나. exe 파일명에만 버전(`blog용GUI_v1.2.3.exe`), 새 버전 배포 시 이전 exe만 삭제·교체(config.json·published_log.json·remote_jobs.json·사용법.txt는 그대로). 구버전 폴더(v1.2.1·v1.2.2, bak 포함)는 `blog용GUI\_구버전\`에 통째 보존. 배포 스크립트=`tab_publisher/gui/deploy_notebook.bat <버전>` (push e12a65d). **다음 세션: 새 폴더 만들지 말 것.**
+- v1.2.3 빌드·배포됨(ALT stuck 수정 + 시작 시 modifier 자동해제, requireAdministrator 확인, 26,616,147B). APP_VERSION=1.2.3.
+- 엘리트 IP 2개 추가 결제(총 62) — Config.ini 아직 60개, 매니저 [IP리스트 갱신] 후 행60·61 뜨면 blogno1·soo_bio에 매핑 예정(그러면 62블로그 전원 IP).
