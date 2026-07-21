@@ -63,3 +63,5 @@ metadata:
 - ⚠️ **미검증(실기기 필요)**: CDP Input.insertText 가 SE3 iframe contenteditable 에 실제 반영되는지 = read-back 검증이 잡아주지만, 실패하면 매번 폴백(통째주입)으로 발행됨. 대표님 단일발행 1건으로 먼저 확인 권장. 로그 "본문 타이핑 OK N자" 뜨면 성공, "타이핑 미반영...폴백" 뜨면 SE3 미지원 = human_mode 재검토.
 
 **2026-07-21 v1.2.6 [🧪 테스트 발행] 버튼**: 연속발행 탭 우측상단(top frame side=right). _start_test_batch → _batch_run(test_mode=True): ①제목 자동가져오기(_fetch_slot_titles) 안 함 — b_rows GUI 입력제목 그대로 ②_slot_already_published/_low_trust_skip_reason 가드 무시(당일 반복발행) ③_click_publish(record=False) → _record_published/_notify_published 안 함(반복 테스트 가능, _mark 헬퍼로 분기). VPN 절대규칙(_connect_vpn)은 유지. 배포=blog용GUI_v1.2.6.exe(v1.2.5는 _구버전). push 7ca7265.
+
+**2026-07-21 v1.2.7 '이전 발행중 글' 팝업 닫기**: "이미 이전에 발행 중인 글이 있습니다. 계속하시겠습니까? 네/아니오"(이전 임시글 불러오기) 팝업이 안 닫혀 사람모드 타이핑이 막혀 본문 미작성(대표님 신고). dismiss_popups: 프롬프트 문구(계속하시/이어서 작성/불러오시/이전에 발행|작성) 감지 시 '아니오/아니요'(새로작성) 클릭 추가('네'=이전글로드=본문오염 금지). _fill 이 본문 쓰기 직전 dismiss 최대3회. 전 발행경로(_fill 공통) 적용. 배포 blog용GUI_v1.2.7.exe(v1.2.6은 _구버전). push 99330d6.
