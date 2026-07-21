@@ -61,3 +61,5 @@ metadata:
 - 🔴🔴 **적대적 리뷰 3 HIGH 반영(중요)**: ①type_body는 타이핑 후 getContentText **read-back 검증**(에디터 실제글자<예상50% 또는 예외 시 실패→폴백, 빈글 발행 방지) ②발행 2차 URL타임아웃은 **클릭 성사(ok)일 때만 발행기록**(실패 시 재시도 가능 — 미발행 오기록→_slot_already_published 영구차단 방지) ③reposition_photos는 **마커 못찾은 사진 본문끝 append**(유실 방지)+Enter text '\r' 제거(문단분리 보장). push 0314cd4.
 - 2회차 버튼 제거(제목가져오기·발행 1개씩). 배포=고정폴더 blog용GUI_v1.2.5.exe(v1.2.4는 _구버전). requireAdministrator 확인.
 - ⚠️ **미검증(실기기 필요)**: CDP Input.insertText 가 SE3 iframe contenteditable 에 실제 반영되는지 = read-back 검증이 잡아주지만, 실패하면 매번 폴백(통째주입)으로 발행됨. 대표님 단일발행 1건으로 먼저 확인 권장. 로그 "본문 타이핑 OK N자" 뜨면 성공, "타이핑 미반영...폴백" 뜨면 SE3 미지원 = human_mode 재검토.
+
+**2026-07-21 v1.2.6 [🧪 테스트 발행] 버튼**: 연속발행 탭 우측상단(top frame side=right). _start_test_batch → _batch_run(test_mode=True): ①제목 자동가져오기(_fetch_slot_titles) 안 함 — b_rows GUI 입력제목 그대로 ②_slot_already_published/_low_trust_skip_reason 가드 무시(당일 반복발행) ③_click_publish(record=False) → _record_published/_notify_published 안 함(반복 테스트 가능, _mark 헬퍼로 분기). VPN 절대규칙(_connect_vpn)은 유지. 배포=blog용GUI_v1.2.6.exe(v1.2.5는 _구버전). push 7ca7265.
