@@ -76,3 +76,5 @@ metadata:
 - 배포 blog용GUI_v1.3.0.exe(v1.2.8 _구버전). push d81e565. ⚠️사진 대화상자·SE3 사진버튼 셀렉터는 실기기 미검증 — 첫 테스트서 셀렉터 튜닝 가능성(그동안 paste 폴백으로 발행됨).
 
 **2026-07-27 v1.3.1 강조(볼드) 폰트 키우기**: 대표님 "강조=볼드처리된 부분, 폰트 16~19, 매 글 2~4 랜덤. 볼드 없으면 첫 문단 볼드. 목차도 볼드." → JS_SET_BODY applyEmphasis(set_body 안): 볼드 textNode 수집→2~4개 랜덤 fs16/fs19(16~19는 네이버 폰트단계상 fs16/fs19만), 목차문단(목차/[목차]) 볼드, 볼드 전무시 첫 본문문단 볼드. try/catch(실패해도 발행계속). config emphasis{enabled,count_min:2,count_max:4,sizes:[fs16,fs19],bold_toc,bold_first_if_none}. set_body(emphasis=), _fill이 emphasis 있으면 항상 set_body 실행(타이핑 세션 뒤). 로그 "강조폰트 N곳". 배포 blog용GUI_v1.3.1.exe(v1.3.0 _구버전). push ac361a6.
+
+**2026-07-27 v1.3.2 테스트 탭 발행 버튼**: 대표님 "테스트 목적=발행/사진/누락 확인이니 제목칸+발행버튼 필요". 테스트 탭 각 아이디에 제목 Entry + [② 테스트 발행]. _test_publish(slot): _test_connect_ip로 엘리트IP 고정 재연결(불일치 차단)→테스트프로필로 GoBlogWrite.naver 진입(로그인세션 유지)→_start_vpn_watchdog→_generate_ai(제목,정보글)→_fill(타이핑+서식+강조+사진dialog)→_vpn_dropped/_verify_vpn_before_publish('test',엘리트=IP실측) 통과시만 _click_publish(record=False). 맨IP 발행 3중 차단(연결시 IP대조+watchdog+발행직전 재확인). _test_titles per slot. 배포 blog용GUI_v1.3.2.exe(v1.3.1 _구버전). push d9b9c69.
