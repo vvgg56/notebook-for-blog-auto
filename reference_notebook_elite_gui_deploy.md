@@ -67,3 +67,10 @@ metadata:
 **2026-07-21 v1.2.7 '이전 발행중 글' 팝업 닫기**: "이미 이전에 발행 중인 글이 있습니다. 계속하시겠습니까? 네/아니오"(이전 임시글 불러오기) 팝업이 안 닫혀 사람모드 타이핑이 막혀 본문 미작성(대표님 신고). dismiss_popups: 프롬프트 문구(계속하시/이어서 작성/불러오시/이전에 발행|작성) 감지 시 '아니오/아니요'(새로작성) 클릭 추가('네'=이전글로드=본문오염 금지). _fill 이 본문 쓰기 직전 dismiss 최대3회. 전 발행경로(_fill 공통) 적용. 배포 blog용GUI_v1.2.7.exe(v1.2.6은 _구버전). push 99330d6.
 
 **2026-07-21 v1.2.8 본문 클릭 포커스(타이핑 첫글자 씹힘 수정)**: JS ce.focus()만으론 iframe 본문에 CDP 키입력 포커스 안 붙어 첫 글자 씹히고 '중간부터' 써짐(대표님: 직접 본문 클릭해야 됐음). cdp_client focus_body_click: 가장 큰 contenteditable(=본문) 클릭지점 좌표(JS_BODY_RECT, iframe오프셋 보정)→실제 마우스클릭(dispatchMouseEvent)→JS_BODY_FOCUSED(activeElement.isContentEditable) 확인될 때까지 최대3회→JS_FOCUS_END 백업. type_body가 focus_body_end 대신 focus_body_click 사용. 실패해도 read-back(H1)이 잡아 set_body 폴백. 배포 blog용GUI_v1.2.8.exe(v1.2.7 _구버전). push 95e8432.
+
+**2026-07-27 v1.3.0 누락(발행봇 세션=봇 감지) 대응 + 테스트탭**:
+- 🔴🔴 **누락 원인 재규명(대표님 증거)**: 원고엔진 아님(수기발행=누락0). 발행봇 '발행 과정'이 계정단위 봇플래그. IP/VPN 아님(수기+VPN 살아남음), 기기단독 아님(그날 전부 누락 아님). = **세션(체류시간·점진초안·자동저장·편집이벤트)이 봇스러움**. 고객 블덱스라이터GUI=Selenium+클립보드+본인IP(se3_editor), 발행봇=CDP+엘리트IP+setDocumentData. 클릭은 네이버가 사람/봇 구분 못함(개발자 확인).
+- **대응 방향(대표님 합의)**: ①본문 타이핑(세션)+set_body 서식(볼드/색/인용구 살림, 서식없으면 통째주입 생략) ②사진=합성paste 폐기→진짜 '사진메뉴+파일탐색기'(YYMMDD/블로그/사진N 폴더→마커 실제클릭→사진버튼클릭→네이티브 열기 대화상자 WM_SETTEXT+IDOK→image개수 검증→마커정리, 실패시 paste 폴백) ③발행 전 체류 publish_dwell_sec(90s)로 자동저장 쌓기. config photo_mode/publish_dwell_sec/test_accounts.
+- 🔴 **적대적리뷰 5HIGH 반영**(빌드전): H4 체류중 VPN끊김·중지 즉시반환+발행직전 _vpn_dropped 재확인(맨IP차단), H1/M1 대화상자 안닫히면 취소로닫고 실패, H5 네이티브대화상자 Edge PID 검증(오조작방지), H2 image개수 삽입검증, H3 부분실패시 remove_all_images 클린슬레이트, M3 서식없으면 set_body생략, M4 무효스크롤 제거.
+- 🧪 **테스트 탭(맨오른쪽)**: 아이디2개(config test_accounts), [테스트 1회 아이디 로그인]=지정 엘리트IP(61.250.181.222=행58, 218.36.120.215=행50) 고정연결(_test_connect_ip, rows직접)+새 엣지세션(TestProfile1/2)+네이버 로그인. IP연결 실패시 엣지 안엶.
+- 배포 blog용GUI_v1.3.0.exe(v1.2.8 _구버전). push d81e565. ⚠️사진 대화상자·SE3 사진버튼 셀렉터는 실기기 미검증 — 첫 테스트서 셀렉터 튜닝 가능성(그동안 paste 폴백으로 발행됨).
