@@ -74,3 +74,5 @@ metadata:
 - 🔴 **적대적리뷰 5HIGH 반영**(빌드전): H4 체류중 VPN끊김·중지 즉시반환+발행직전 _vpn_dropped 재확인(맨IP차단), H1/M1 대화상자 안닫히면 취소로닫고 실패, H5 네이티브대화상자 Edge PID 검증(오조작방지), H2 image개수 삽입검증, H3 부분실패시 remove_all_images 클린슬레이트, M3 서식없으면 set_body생략, M4 무효스크롤 제거.
 - 🧪 **테스트 탭(맨오른쪽)**: 아이디2개(config test_accounts), [테스트 1회 아이디 로그인]=지정 엘리트IP(61.250.181.222=행58, 218.36.120.215=행50) 고정연결(_test_connect_ip, rows직접)+새 엣지세션(TestProfile1/2)+네이버 로그인. IP연결 실패시 엣지 안엶.
 - 배포 blog용GUI_v1.3.0.exe(v1.2.8 _구버전). push d81e565. ⚠️사진 대화상자·SE3 사진버튼 셀렉터는 실기기 미검증 — 첫 테스트서 셀렉터 튜닝 가능성(그동안 paste 폴백으로 발행됨).
+
+**2026-07-27 v1.3.1 강조(볼드) 폰트 키우기**: 대표님 "강조=볼드처리된 부분, 폰트 16~19, 매 글 2~4 랜덤. 볼드 없으면 첫 문단 볼드. 목차도 볼드." → JS_SET_BODY applyEmphasis(set_body 안): 볼드 textNode 수집→2~4개 랜덤 fs16/fs19(16~19는 네이버 폰트단계상 fs16/fs19만), 목차문단(목차/[목차]) 볼드, 볼드 전무시 첫 본문문단 볼드. try/catch(실패해도 발행계속). config emphasis{enabled,count_min:2,count_max:4,sizes:[fs16,fs19],bold_toc,bold_first_if_none}. set_body(emphasis=), _fill이 emphasis 있으면 항상 set_body 실행(타이핑 세션 뒤). 로그 "강조폰트 N곳". 배포 blog용GUI_v1.3.1.exe(v1.3.0 _구버전). push ac361a6.
