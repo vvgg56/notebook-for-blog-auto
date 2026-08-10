@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T05:48:03.862Z
+  modified: 2026-08-10T06:11:28.662Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -40,5 +40,11 @@ metadata:
 - /remote 발행은 10분 쿨다운(slot|date 채널) — 기존과 동일.
 - **E2E 실측 검증 완료(2026-08-10 14:10)**: /remote 발행버튼(joywater2 1개) → 브리지 claim+run#1 → 워커 poll 시뮬 claim → prepare 실원고 생성 **113초**(4,259자·강조마커29·사진1) → article 수신 → report → run done → /remote job "done·발행0건·agent=jgluna-worker-v2.51"·봇 online·로그 표시 전부 확인. **엣지로 실발행하는 마지막 단계만 미검증**(GUI 실행은 대표님 몫). joywater2 오늘자 원고는 캐시돼 있어 실발행 시 즉시 나감.
 - 🔧 report 핸들러는 /api/schedule self-HTTP 금지(repair 8초+대용량 → 15초 타임아웃 실측) — schedule_meta.json/published_state.json 파일 직읽기로 교체. bot/logs 전달 seq 는 **+9e9 오프셋**(옛 TabPublisher seq 와 충돌 시 중복 판정으로 버려짐), 커서(fwd_seq)는 원본 seq 공간 유지.
+
+**📶 브랜딩 대시보드 엘리트IP 표시 (2026-08-10 오후, 직원 요청→대표님 지시):**
+- `BRANDING_BUSINESSES` 각 항목에 `elite_ip` 추가 + `/api/branding` 응답 포함 + index.html 브랜딩 탭 헤더에 IP 배지(미배정=회색 점선). 백업 index.html.bak_20260810_eliteip.
+- **브랜딩 IP 확정 근거** = 7월 blog_ips 백업의 행번호↔프로필순서 역추적(자동발행 57개 미사용 잔여 5개와 1:1 일치): horizon37=61.250.142.59(key syss8938) · haerieva=211.255.15.42 · space_blog=211.254.99.247(key sense1215) · inbyeol-=61.250.234.207(key haruka234) · hhanwool=61.250.133.4 · **wemembers/goldenlady73=배정 이력 없음**. min18ya=211.254.69.156(자동발행 배정 그대로).
+- 🆕 타세션이 **min18ya(구 사이페이 공식블)를 8번째 브랜딩(블덱스라이터)으로 전환**(14:45) — 자동발행에선 BRANDING pop으로 자동 제외됨(bizops customers 에 남아있지만 서빙 안 됨).
+- 🔍 **GUI 엘리트 스캔 "자동읽기 불완전" 경고의 정체**: Windows OCR이 끝자리 짧은 IP(…239.8/…12.21 등) 행을 계속 못 읽어 안전가드(불완전 스캔 덮어쓰기 방지)가 발동하는 것. **매핑은 정확, 발행 무관**(발행은 rows+ipify 실측 검증). 대처=시작 팝업 "자동읽기 할까요?"에 아니오. 근본수선은 v2.52 빌드 때(스캔 OCR 보완+갭 재시도 개선).
 
 **⚠️ 미검증/후속**: ①v2.51 실기기 발행 end-to-end 미검증 — 첫 실행 시 GUI [워커 시작]+발행시작으로 1건 확인 필요(테스트 탭도 동작: test-article 서버 구현됨) ②prepare(원고+사진 생성)가 8분 넘으면 그 회차 실패→다음 run에서 캐시로 즉시 성공(재시도 무해) ③자정 자동발행 런처는 이 노트북용 미조정(경로·exe명이 2번 PC 기준) ④타세션이 13:18에 main.py를 또 수정(275KB, 내 훅 7개 생존 확인) — **서버 main.py는 브랜딩+bizops 공존본이 정본, 어느 세션이든 통째 재업로드 금지(diff-merge 필수)**.
