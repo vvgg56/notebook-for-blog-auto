@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T06:11:28.662Z
+  modified: 2026-08-10T08:37:49.711Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -48,3 +48,10 @@ metadata:
 - 🔍 **GUI 엘리트 스캔 "자동읽기 불완전" 경고의 정체**: Windows OCR이 끝자리 짧은 IP(…239.8/…12.21 등) 행을 계속 못 읽어 안전가드(불완전 스캔 덮어쓰기 방지)가 발동하는 것. **매핑은 정확, 발행 무관**(발행은 rows+ipify 실측 검증). 대처=시작 팝업 "자동읽기 할까요?"에 아니오. 근본수선은 v2.52 빌드 때(스캔 OCR 보완+갭 재시도 개선).
 
 **⚠️ 미검증/후속**: ①v2.51 실기기 발행 end-to-end 미검증 — 첫 실행 시 GUI [워커 시작]+발행시작으로 1건 확인 필요(테스트 탭도 동작: test-article 서버 구현됨) ②prepare(원고+사진 생성)가 8분 넘으면 그 회차 실패→다음 run에서 캐시로 즉시 성공(재시도 무해) ③자정 자동발행 런처는 이 노트북용 미조정(경로·exe명이 2번 PC 기준) ④타세션이 13:18에 main.py를 또 수정(275KB, 내 훅 7개 생존 확인) — **서버 main.py는 브랜딩+bizops 공존본이 정본, 어느 세션이든 통째 재업로드 금지(diff-merge 필수)**.
+
+**🛰 v2.52 /remote 원버튼화 + IP 중복 수습 (2026-08-10 저녁, 대표님 지시):**
+- **IP 중복(GUI 경고 4건)의 정체** = `bizops_state.json` **overlay**(최초 로그인 때 bz_first_login 이 실측 IP 기록, base 보다 **우선**). 15:19/15:27 최초 로그인 때 nuri6342·arbamkong 이 엉뚱한 엘리트 행으로 연결된 채 기록돼 cwr7707(211.254.48.149)·golfyaplay(211.235.228.206)의 IP 와 충돌. **`POST /api/bizops/worker/expected-ip`(워커키)로 base 값 복원**: nuri6342=211.254.82.149(행29)·arbamkong=211.41.174.206(행42) → 중복 0. 🔴 함정: overlay 는 빈 문자열("")도 base 를 이김 — [고정IP 연결해제]식 "" 말고 **올바른 IP 를 넣어야** 함. 비슷한 IP(…48.149/…82.149, …228.206/…174.206) 수동 행클릭 착오가 원인으로 추정.
+- **원버튼화 근본원인 2개**: ①워커 꺼짐+GUI만 열림 → 잡이 queued 로 잠듦(사람이 [워커 시작] 눌러야) ②서버 `_auth` 가 모든 인증 호출에 `_last_seen` 갱신 → **GUI 60초 customers 폴링까지 '워커 온라인' 오판** → 브리지가 워커 없이 claim → /remote 유령 '발행중'(누르면 진행되는 척만 하던 증상의 서버측 원인).
+- **서버 패치**(bizops_compat.py, 백업 `.bak_20260810_remoteauto`, systemctl restart 완료): `_touch_worker()` 분리 — 워커 전용 6엔드포인트(poll/prepare/prepare-status/article/report/event)만 생존 갱신(worker.py 유휴 루프도 /poll 45초 확인). customers 응답에 `remote_pending`(publish_jobs.json queued peek)·`run_active`(stopping 제외)·`run_id` 추가(구버전 GUI 하위호환). 미등록 블로그만 지정된 /remote 잡 = run 안 만들고 done 마감(빈 target=전체발행 방지). BRIDGE_AGENT=jgluna-worker-v2.52.
+- **GUI v2.52**(gui.py, push b1e0777): `_maybe_autostart_remote` — 발행할 일 있고 워커 꺼져 있으면 자동 [▶ 워커 시작]. 예외: 중복IP·로그인창·살아있는 워커·[■ 중지] 후 10분·`remote_autostart:false`(기본 true). 적대적 리뷰 12건 반영: auto 경로 save_cfg 생략(핫루프+설정탭 입력 오염 방지)·`_pid_is_live_worker`(STILL_ACTIVE+이미지명 blogdex/jgluna/BizPublisher, 좀비/재사용 pid 오판 방지)·_on_exit pid 파일 정리·중지 run_id 봉인+`autostart_state.json` 영속화·run-stop 3회(1동기+2백그라운드)·run_active 2연속 관측 후 시작(자정 런처 이중워커 방지)·자동시작 55초 간격+30분 3회 상한(2분 이상 생존=정상 완주 리셋).
+- **빌드/배포**: 이 노트북 python3.14 PyInstaller(`--onefile --noconsole --uac-admin --name BizPublisherGUI_v2.52 --hidden-import cdp_client/worker/connection/socks/PIL.ImageGrab/human_publisher/cdp_human/human_test_tab`) → `Downloads\jgluna용GUI_v2.51_배포\jgluna용GUI_v2.52.exe`(v2.51.exe 병존). 소스 클론 = `~/Desktop/biz-publisher`(신규). ⚠️ **대표님이 v2.52 exe 를 실행해야 반영** — /remote 원버튼은 GUI(v2.52)가 켜져 있어야 동작(60초 감지+브리지 8초+워커 45초 폴 = 버튼→발행 시작 최대 ~2분). **실제 /remote 버튼→자동시작→발행 E2E 는 미검증**(실행은 대표님 몫).
