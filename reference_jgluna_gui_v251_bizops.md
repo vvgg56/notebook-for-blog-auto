@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T10:19:57.784Z
+  modified: 2026-08-10T16:55:17.284Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -56,3 +56,18 @@ metadata:
 - **GUI v2.52**(gui.py, push b1e0777): `_maybe_autostart_remote` — 발행할 일 있고 워커 꺼져 있으면 자동 [▶ 워커 시작]. 예외: 중복IP·로그인창·살아있는 워커·[■ 중지] 후 10분·`remote_autostart:false`(기본 true). 적대적 리뷰 12건 반영: auto 경로 save_cfg 생략(핫루프+설정탭 입력 오염 방지)·`_pid_is_live_worker`(STILL_ACTIVE+이미지명 blogdex/jgluna/BizPublisher, 좀비/재사용 pid 오판 방지)·_on_exit pid 파일 정리·중지 run_id 봉인+`autostart_state.json` 영속화·run-stop 3회(1동기+2백그라운드)·run_active 2연속 관측 후 시작(자정 런처 이중워커 방지)·자동시작 55초 간격+30분 3회 상한(2분 이상 생존=정상 완주 리셋).
 - **빌드/배포**: 이 노트북 python3.14 PyInstaller(`--onefile --noconsole --uac-admin --name BizPublisherGUI_v2.52 --hidden-import cdp_client/worker/connection/socks/PIL.ImageGrab/human_publisher/cdp_human/human_test_tab`) → `Downloads\jgluna용GUI_v2.51_배포\jgluna용GUI_v2.52.exe`(v2.51.exe 병존). 소스 클론 = `~/Desktop/biz-publisher`(신규). ⚠️ **대표님이 v2.52 exe 를 실행해야 반영** — /remote 원버튼은 GUI(v2.52)가 켜져 있어야 동작(60초 감지+브리지 8초+워커 45초 폴 = 버튼→발행 시작 최대 ~2분). **실제 /remote 버튼→자동시작→발행 E2E 는 미검증**(실행은 대표님 몫).
 - 🔴 **회귀 1건 즉시 수습(같은 날 저녁, 대표님 신고)**: _worker_online 분리 부작용으로 브리지 하트비트가 '워커 살아있을 때만' 나가 **GUI 켜져 있어도 /remote 가 '노트북 오프라인'** 표시. fix = `_gui_seen`/`_gui_online()`(customers 150초 창) 별도 추적, 하트비트 게이트만 `online or _gui_online()`(**claim 게이트는 워커 전용 유지** — 섞으면 유령 '발행중' 재발). 백업 `.bak_20260810_guionline`, 하트비트 6초 신선도 실측 확인. 교훈: 생존 신호를 분리하면 그 신호를 '표시'에 쓰던 소비자(하트비트)까지 따라가는지 확인할 것.
+
+**🔑 워커 키 회전 (2026-08-11 새벽, 대표님 "신호가 저쪽 노트북으로 가는 것 같다"):**
+- 새 키 발급 → `bizops_worker_key.txt`(구키 백업 `.bak_20260811_rotation`) + 노트북 config.json 만 갱신. **구키=401 확인** — 2번 PC 등 다른 기기의 v2.51 잔재 config 는 전부 차단됨. 포렌식: 그날 밤 워커 폴링은 45초 단일 스트림(이 노트북뿐), run#3 죽음=/remote [■정지] 2회(00:56:44), 자정 최초로그인 9건=전부 올바른 IP(오염 0). ⚠️ 키 교체 후 **GUI 재시작 필수**(설정탭 위젯에 구키 잔존 — [설정 저장]/[워커 시작] 누르면 구키 역저장).
+- bz_run stopping 전환(브리지 stop_seq)은 run.events 에 안 남고 `_append_log` 만 씀 — "이벤트 없는 done run"의 정체.
+
+**🧯 /remote 사용성 (2026-08-11 새벽, 대표님 지시):** ①쿨다운 완전 제거(서버 COOLDOWN_SEC=0 + 클라 startCooldown 제거 — active 중복거부·RSS 가드는 유지) ②로그 렉 = pollLogs 가 줄마다 `innerHTML+=`(전체 재파싱 O(n²)·무한누적) → LOGBUF 400줄 캡+1회 렌더. 백업 `main.py.bak_20260811_remotelag`. ③워커 유휴 문구 "bizadmin 에서 [발행시작]" → 원격/브랜딩 포함으로 교정(v2.53).
+
+**🖋 브랜딩 임시저장 (2026-08-11 새벽, 대표님 "원고 5개 미리 임시저장"):**
+- /remote 에 **[🖋 브랜딩 임시저장] 탭**(main.py 패치, 백업 `main.py.bak_20260811_branding`): /api/branding 목록 렌더(IP 없는 딸칵·청소플래닛=비활성), 블로그당 개수(기본5) → POST publish-jobs `action:"draft"`+`count`(PublishJobReq 에 count 추가, 채널·_active_job_for 에 action 분리).
+- 서버 bizops: `bizops_branding.json` 레지스트리(6개: 사이페이/horizon37·고시원/haerieva·가론지/space_blog·인별/inbyeol-·삐딱/hhanwool=uid 2001~2005 가짜고객, 블덱스라이터/min18ya=기존 uid 1035 재사용 — pseudo 만들면 IP 중복 경고 터짐). customers 응답에 draft_only="1"로 서빙. 브리지 draft claim→run{mode:"draft", draft_items(제목 얼림), draft_pos}→poll 이 순서 서빙→prepare/report 는 sid 분기. **sid=9e8+(uid%1000)*1e6+YYMMDD**(리뷰: idx 인코딩=레지스트리 편집 시 타 블로그 오배정, 연도누락=12월→1월+1년 뒤 캐시 재사용 사고). 완료기록=`bizops_branding_drafts.json`(타세션 branding_schedules.json 은 읽기만).
+- 노트북 config customers 에 uid 2001~2005+1035: edge_profile(P63/P46/P45/P11/P42… 옛 profile_to_blog 실측)+**draft_only:"1"+expected_ip**(오버라이드는 항상 병합 — 고객목록 캐시/폴백 상황에서도 발행·맨IP로 못 샘).
+- 워커 v2.53: **item.draft=True 면 _dmode 무조건 "1"**(서버 draft 아이템은 어떤 경우에도 발행 안 함) + draft 아이템은 로그인 계정 확정 불일치 시 저장 중단. 임시저장 실행부는 기존 [임시저장만] 경로(cdp.save_draft) 그대로.
+- 🔴 리뷰가 막은 대형사고: patch 스크립트 confirm 의 `\n` 이스케이프 1단계 부족 → non-raw 로 적용했으면 **/remote <script> 전체 SyntaxError**(발행 탭까지 사망). main.py HTML 문자열 패치는 **raw 문자열 + 기존 confirm 라인과 바이트 대조**가 규칙.
+- ⚠️ E2E 실기기 미검증: 첫 실행은 /remote 브랜딩 탭에서 블로그 1개×원고 1개로 확인 권장. 같은 블로그 2번째 원고부터 SE3 '작성 중인 글' 복원 팝업은 워커의 초안팝업 자동닫기가 처리(비즈 운영 검증 경로).
+- **레포 공유 주의**: vvgg56/biz-publisher 를 2번 PC(비즈)와 같이 씀 — 그쪽도 같은 날 v2.53(a21c2b2 URL 재클릭+링크 아이콘) 푸시해 rebase 병합함(ef964d1). push 전 pull 필수. 배포 exe = `jgluna용GUI_v2.53.exe`(병합본 빌드).
