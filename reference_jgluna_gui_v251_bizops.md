@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T08:37:49.711Z
+  modified: 2026-08-10T10:19:57.784Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -55,3 +55,4 @@ metadata:
 - **서버 패치**(bizops_compat.py, 백업 `.bak_20260810_remoteauto`, systemctl restart 완료): `_touch_worker()` 분리 — 워커 전용 6엔드포인트(poll/prepare/prepare-status/article/report/event)만 생존 갱신(worker.py 유휴 루프도 /poll 45초 확인). customers 응답에 `remote_pending`(publish_jobs.json queued peek)·`run_active`(stopping 제외)·`run_id` 추가(구버전 GUI 하위호환). 미등록 블로그만 지정된 /remote 잡 = run 안 만들고 done 마감(빈 target=전체발행 방지). BRIDGE_AGENT=jgluna-worker-v2.52.
 - **GUI v2.52**(gui.py, push b1e0777): `_maybe_autostart_remote` — 발행할 일 있고 워커 꺼져 있으면 자동 [▶ 워커 시작]. 예외: 중복IP·로그인창·살아있는 워커·[■ 중지] 후 10분·`remote_autostart:false`(기본 true). 적대적 리뷰 12건 반영: auto 경로 save_cfg 생략(핫루프+설정탭 입력 오염 방지)·`_pid_is_live_worker`(STILL_ACTIVE+이미지명 blogdex/jgluna/BizPublisher, 좀비/재사용 pid 오판 방지)·_on_exit pid 파일 정리·중지 run_id 봉인+`autostart_state.json` 영속화·run-stop 3회(1동기+2백그라운드)·run_active 2연속 관측 후 시작(자정 런처 이중워커 방지)·자동시작 55초 간격+30분 3회 상한(2분 이상 생존=정상 완주 리셋).
 - **빌드/배포**: 이 노트북 python3.14 PyInstaller(`--onefile --noconsole --uac-admin --name BizPublisherGUI_v2.52 --hidden-import cdp_client/worker/connection/socks/PIL.ImageGrab/human_publisher/cdp_human/human_test_tab`) → `Downloads\jgluna용GUI_v2.51_배포\jgluna용GUI_v2.52.exe`(v2.51.exe 병존). 소스 클론 = `~/Desktop/biz-publisher`(신규). ⚠️ **대표님이 v2.52 exe 를 실행해야 반영** — /remote 원버튼은 GUI(v2.52)가 켜져 있어야 동작(60초 감지+브리지 8초+워커 45초 폴 = 버튼→발행 시작 최대 ~2분). **실제 /remote 버튼→자동시작→발행 E2E 는 미검증**(실행은 대표님 몫).
+- 🔴 **회귀 1건 즉시 수습(같은 날 저녁, 대표님 신고)**: _worker_online 분리 부작용으로 브리지 하트비트가 '워커 살아있을 때만' 나가 **GUI 켜져 있어도 /remote 가 '노트북 오프라인'** 표시. fix = `_gui_seen`/`_gui_online()`(customers 150초 창) 별도 추적, 하트비트 게이트만 `online or _gui_online()`(**claim 게이트는 워커 전용 유지** — 섞으면 유령 '발행중' 재발). 백업 `.bak_20260810_guionline`, 하트비트 6초 신선도 실측 확인. 교훈: 생존 신호를 분리하면 그 신호를 '표시'에 쓰던 소비자(하트비트)까지 따라가는지 확인할 것.
