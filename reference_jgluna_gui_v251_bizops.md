@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T04:53:01.841Z
+  modified: 2026-08-10T05:17:32.221Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -32,5 +32,13 @@ metadata:
 - `build_daily_convert_pool` 순서 변경: **AI(스타일+rank 키워드 타겟)가 1순위** → rank 템플릿 → BIZ_TITLES. 고시원/요식업/우삼집은 템플릿 유지(지점·쿨다운 민감).
 - day100~102 전환글 **84칸 전부 새 스타일로 교체**(`restyle_days.py`, /api/schedule/update 경유 — manual·발행완료 칸 보존, 교체분은 manual:True 마킹됨).
 - 🔴 **동시편집 경합 2회**: 타세션이 13:38에 +10.5KB 추가 → 내가 13:41 덮어씀(그쪽 delta 유실) → `main.py.bak_20260810_style`(그쪽 13:38본)에서 복구, 그 위에 내 패치 재적용해 병합 배포(286,368B). 서버 main.py 배포 전 반드시 `stat` mtime 확인 + 바뀌었으면 diff-merge.
+
+**🔗 /remote 연동 (2026-08-10 오후, 대표님 지시):**
+- `bizops_compat.py` 안에 **브리지 스레드**(8초 틱, main.py 무수정): /remote 발행버튼 → publish-jobs 큐 → 브리지가 X-Pub-Secret 으로 `publish-jobs/next` claim → **bizops run 생성**(선택 블로그→uid 타겟) → v2.51 워커가 발행 → 진행상황을 `PUT job status`(published_count)·`bot/heartbeat`(agent_id=jgluna-worker-v2.51)·`bot/logs`(이벤트 seq 미러)로 역전달 → /remote 화면에 그대로 표시. /remote [정지] = control stop_seq 엣지 감지 → run stopping.
+- claim 조건: 활성 run 없음 + **워커가 최근 90초 내 bizops 호출**(오프라인이면 queued 유지 = 화면에 정확히 표시). 워커 오프라인 상태에서 /remote 눌러도 안전.
+- 노트북 config `auto_stop_after_run=false` 로 변경 — run 끝나도 워커가 계속 폴링해 /remote 트리거 상시 수신 (biz 기본과 다름 주의).
+- /remote 발행은 10분 쿨다운(slot|date 채널) — 기존과 동일.
+- **E2E 실측 검증 완료(2026-08-10 14:10)**: /remote 발행버튼(joywater2 1개) → 브리지 claim+run#1 → 워커 poll 시뮬 claim → prepare 실원고 생성 **113초**(4,259자·강조마커29·사진1) → article 수신 → report → run done → /remote job "done·발행0건·agent=jgluna-worker-v2.51"·봇 online·로그 표시 전부 확인. **엣지로 실발행하는 마지막 단계만 미검증**(GUI 실행은 대표님 몫). joywater2 오늘자 원고는 캐시돼 있어 실발행 시 즉시 나감.
+- 🔧 report 핸들러는 /api/schedule self-HTTP 금지(repair 8초+대용량 → 15초 타임아웃 실측) — schedule_meta.json/published_state.json 파일 직읽기로 교체. bot/logs 전달 seq 는 **+9e9 오프셋**(옛 TabPublisher seq 와 충돌 시 중복 판정으로 버려짐), 커서(fwd_seq)는 원본 seq 공간 유지.
 
 **⚠️ 미검증/후속**: ①v2.51 실기기 발행 end-to-end 미검증 — 첫 실행 시 GUI [워커 시작]+발행시작으로 1건 확인 필요(테스트 탭도 동작: test-article 서버 구현됨) ②prepare(원고+사진 생성)가 8분 넘으면 그 회차 실패→다음 run에서 캐시로 즉시 성공(재시도 무해) ③자정 자동발행 런처는 이 노트북용 미조정(경로·exe명이 2번 PC 기준) ④타세션이 13:18에 main.py를 또 수정(275KB, 내 훅 7개 생존 확인) — **서버 main.py는 브랜딩+bizops 공존본이 정본, 어느 세션이든 통째 재업로드 금지(diff-merge 필수)**.
