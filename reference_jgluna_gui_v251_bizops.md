@@ -5,14 +5,14 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-10T05:17:32.221Z
+  modified: 2026-08-10T05:48:03.862Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
 
 **서버(3.38.22.7 blog-dashboard)에 새로 얹은 것 (systemctl restart 완료, 전부 가동 확인):**
 - `bizops_compat.py` — 워커가 부르는 `/api/bizops/worker/*` + `/api/biz-kakao-queue` 전체 재구현(main.py 맨끝 register 훅 + `_AUTH_EXEMPT_PREFIXES`에 `/api/bizops/` 추가). 스케줄=`/api/schedule`(self-HTTP, **오늘 slot0만 서빙**), 원고=`write_api.WriteAPI.fetch_full_post`(write.jgluna bot/qmffhrm1, 본문+사진 생성·검토, `<사진N>`+`{{bold}}`마커 그대로 워커에 전달—워커가 재부여/서식적용), 발행완료=`POST /api/published-url`(그리드 표시 연동). sched_id=`day_idx*100000+(uid-1000)*10+slot`. 🔴 `worker_expected_ip` 빈 고객은 절대 서빙 안 함(맨IP 금지). 로컬 TestClient 30/30 통과 후 배포.
-- `bizops_customers.json` — 고객 57명(uid 1001~1057=옛 profile_to_blog 순서), **엘리트 신규 IP 1:1 배정**(매니저 Config.ini 59개 중 행0~56, 57·58 예비 — 옛 blog_ips IP세트는 매니저와 교집합 0이라 전면 재배정함), first_login_at 채워둠(엣지 프로필 이미 로그인=최초로그인 불필요).
+- `bizops_customers.json` — 고객 57명(uid 1001~1057=옛 profile_to_blog 순서), first_login_at 채워둠(엣지 프로필 이미 로그인=최초로그인 불필요). **엘리트 IP = 7월 blog_ips 그대로 복원**(블로그별 기존 IP 유지). 🔴 처음에 Config.ini [Mainod] 59개(유령 목록)로 오배정했다가 GUI 스캔 경고로 발각 → 실물(캡쳐 판독=7월 세트 62개 건재, 정렬=문자열 오름차순 bSort=2)로 복원(CLAUDE.md 실수기록 2026-08-10). elite.rows=62(오름차순 행번호). ⚠️ 7월 IP 행0~9는 **만료 2026-08-15** — 만료로 목록 바뀌면 재동기화 필요. [Mainod]의 59개 정체불명 세트는 교체 대비 신규 발급분일 가능성(실물 목록 바뀌는 순간 그걸로 재매핑).
 - `bizops_worker_key.txt` — 워커 키(v2.51 config.json worker_key와 동일). `bizops_config.json`=write 계정. venv에 `requests` 설치함.
 - `title_biz_ai.py` — 블덱스 비즈니스 제목제작 프로세스 이식: 네이버 자동완성+초성(ㄱ~ㅎ) 실검색어+상위노출 제목+rank.jgluna 키워드 → Claude(sonnet-4-6, backend/.env 키) 25~40자 합성 → 사업자관점/가격/금지어 필터. `build_daily_convert_pool` rank 부족분 채움(→BIZ_TITLES 폴백), 정보글 `info_ai_candidates`(day/스케줄 생성 두 곳). CLI: `venv/bin/python title_biz_ai.py show <사업체> 20 | show-info 20`. 전부 실패시 [] = 기존 동작.
 - **딸칵 사업체 신규 등록** — 항공권·쇼핑 최저가 추적 알림 앱(ddalcak.com). BIZ_TITLES 15개+RANK_BIZ_ID_BY_NAME("딸칵"→"ttalkak", rank에 키워드 65개 기등록)+CONVERSION_TITLE_VARIANT_PATTERNS+KEYWORD_TO_BIZ(항공권/땡처리/비행기표)+server config.json 가중치 10(백업 config.json.bak_20260810_ddalkak).
