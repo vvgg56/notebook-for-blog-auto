@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-12T02:35:14.188Z
+  modified: 2026-08-12T03:26:55.489Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -84,4 +84,5 @@ metadata:
 **🫥 v2.59 원격공유 배너 숨김 + 결과 요약 + 2번PC 병합 (2026-08-12, 대표님 "배너 거슬림/pc2에 결과값"):**
 - **PC2 가 이 노트북을 크롬 원격데스크톱(blogdexwriter@gmail.com)으로 원격 조작 중** — '내 컴퓨터를 …과 공유' 배너 = remoting_desktop.exe 의 제목 없는 #32770 topmost(실측 434×43 화면 중앙). v2.59 GUI 가 3초마다 SW_HIDE(표시만 끔, 입력주입 0, config hide_crd_banner=false 로 끔). 발행 클릭 '덮임 보류' 간섭도 제거.
 - **결과값→PC2** = 워커 런 종료 시 요약(성공/실패+실패 블로그·사유 12건)을 GUI 로그+`worker/event`로 /remote 로그에 전달 — **PC2 브라우저에서 blog.jgluna.com/remote 열면 원격데스크톱 없이 열람**. 종료 단발 카톡은 안 보냄(v2.57 서버 요약 카톡 정책 유지).
+- 🔴🔴 **main.py 동시편집 사고 재발(2026-08-12 낮)**: 새벽 03:10 수정(백업 dayart/schedimg, 다른 세션)이 원격발행 상수 6개(BOT_HB_FILE·BOT_LOGS_FILE·COOLDOWN_SEC·LEASE_SEC·STOP_WINDOW_SEC·ONLINE_SEC) 정의 블록을 유실 → bot-status/bot-logs/publish-jobs 전부 NameError 500 → **/remote 가 '노트북 상태 확인 중…'에서 멈춤**(대표님 신고). JOBS_FILE 정의 옆에 원본값 복원(백업 `main.py.bak_20260812_botconst`, restart, NameError 0 + 하트비트 200 실측). 진단 루트: `journalctl -u blog-dashboard` 의 NameError → 백업본과 `grep -c "^NAME = "` 정의/사용 대조. **main.py 를 고치는 세션은 수정 후 반드시 journalctl 로 500 유무 확인할 것.**
 - 🔴 **2번 PC 세션이 v2.55~v2.58 을 같은 날 푸시**(rebase 병합 완료, 커밋 347c538=v2.59): v2.55 실패=임시저장 후 정상 종료(keep_edge_on_error 폐지) · v2.56 [미사용 IP] 버튼 · v2.57 링크 카드 플로우+**플로팅 긴급정지 노출 제거**(발행 2차 클릭 (1155,614) 를 덮어 '덮임 보류' 3회 실사고 — 긴급정지=헤더 버튼+Ctrl+Shift+F9+bizadmin [■멈춤] 20초 감시 유지)+종료 단발 카톡 제거(서버 run 요약 카톡 통합) · v2.58 탭가드(활성 탭 뒤집힘 감지·복귀) · 자정 런처 수동 run 대기. **버전 넘버는 2번 PC 와 공유 — push 전 pull 로 최신 확인 후 그 위 번호로 bump**. 배포 exe=`jgluna용GUI_v2.59.exe`(2번 PC 개선 전부 포함).
