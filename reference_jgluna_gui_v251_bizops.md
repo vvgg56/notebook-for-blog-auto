@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-11T04:57:27.192Z
+  modified: 2026-08-12T02:35:14.188Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -80,3 +80,8 @@ metadata:
 **🖋 [발행]↔브랜딩 임시저장 분리 확정 (2026-08-11 오후, 대표님 "발행만 눌렀는데 브랜딩이 임시저장됨"):**
 - **run #5(13:42 브랜딩 draft)의 실체**: [발행] 탓이 아님 — 아침 **08:14:38 /remote 브랜딩 탭에서 눌린 draft 잡**(command_id `draft-1786403678257`, 6블로그×1개)이 워커 오프라인으로 큐에 잠들었다가, 13:42 GUI 켜지자 `/next`의 "가장 오래된 queued 우선" 규칙으로 **먼저 claim** 된 것. 오늘 [발행] 잡은 00:55·02:03 두 건뿐(전부 루나 44개, 브랜딩 0). 브랜딩 LOGIN_EXPIRED(haerieva P46·space_blog P45)는 **애초에 그 프로필들 로그인 안 해둔 것**(대표님 확인) — 오판 아님.
 - **서버 패치**(백업 `main.py.bak_20260811_brwith`·`bizops_compat.py.bak_20260811_draftexpire`, restart 완료): ①브리지 claim 때 **draft 잡이 생성 15분 경과면 실행 않고 만료 처리**(note "⏰ 만료 — 다시 눌러주세요") — 잠든 임시저장이 몇 시간 뒤 갑자기 도는 일 차단 ②/next 응답에 created_ts 추가 ③발행 탭 상단 **[🖋 브랜딩도 임시저장 같이] 체크박스**(기본 꺼짐, id=brWith) — 체크 시 [발행] 성공 후 `draftw-` 접두 draft 잡을 추가 발행(blogs=[]=IP 있는 전체 브랜딩, 개수=브랜딩 탭 brCnt 기본5). **draftw- 는 만료 제외**(발행 run 끝난 뒤 집는 게 정상). 대시보드 포트=8007, 서비스=blog-dashboard.service.
+
+**🫥 v2.59 원격공유 배너 숨김 + 결과 요약 + 2번PC 병합 (2026-08-12, 대표님 "배너 거슬림/pc2에 결과값"):**
+- **PC2 가 이 노트북을 크롬 원격데스크톱(blogdexwriter@gmail.com)으로 원격 조작 중** — '내 컴퓨터를 …과 공유' 배너 = remoting_desktop.exe 의 제목 없는 #32770 topmost(실측 434×43 화면 중앙). v2.59 GUI 가 3초마다 SW_HIDE(표시만 끔, 입력주입 0, config hide_crd_banner=false 로 끔). 발행 클릭 '덮임 보류' 간섭도 제거.
+- **결과값→PC2** = 워커 런 종료 시 요약(성공/실패+실패 블로그·사유 12건)을 GUI 로그+`worker/event`로 /remote 로그에 전달 — **PC2 브라우저에서 blog.jgluna.com/remote 열면 원격데스크톱 없이 열람**. 종료 단발 카톡은 안 보냄(v2.57 서버 요약 카톡 정책 유지).
+- 🔴 **2번 PC 세션이 v2.55~v2.58 을 같은 날 푸시**(rebase 병합 완료, 커밋 347c538=v2.59): v2.55 실패=임시저장 후 정상 종료(keep_edge_on_error 폐지) · v2.56 [미사용 IP] 버튼 · v2.57 링크 카드 플로우+**플로팅 긴급정지 노출 제거**(발행 2차 클릭 (1155,614) 를 덮어 '덮임 보류' 3회 실사고 — 긴급정지=헤더 버튼+Ctrl+Shift+F9+bizadmin [■멈춤] 20초 감시 유지)+종료 단발 카톡 제거(서버 run 요약 카톡 통합) · v2.58 탭가드(활성 탭 뒤집힘 감지·복귀) · 자정 런처 수동 run 대기. **버전 넘버는 2번 PC 와 공유 — push 전 pull 로 최신 확인 후 그 위 번호로 bump**. 배포 exe=`jgluna용GUI_v2.59.exe`(2번 PC 개선 전부 포함).
