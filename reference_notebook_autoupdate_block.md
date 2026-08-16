@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: f2e81429-2c7e-43da-b69a-b2c59e3d9937
-  modified: 2026-08-14T04:34:47.032Z
+  modified: 2026-08-16T06:35:09.431Z
 ---
 
 **2026-08-12 대표님 "여기 컴퓨터 자동업데이트 다 막아줘"** — 배경: Edge 150 자동업데이트가 디버그포트를 죽여 발행 0건 사고([[reference-edge150-debugport-block]]), 발행 전용 노트북은 버전 동결이 안전.
@@ -21,3 +21,5 @@ metadata:
 **해제**: 바탕화면 `자동업데이트차단해제.bat`(`block_autoupdate_undo.ps1`) — 정책 삭제 + 서비스 Manual + 예약작업 Enable. 로그 `%TEMP%\noupdate_undo_result.txt`.
 
 **주의**: 보안패치도 같이 멈춤 — 몇 달에 한 번, 발행 없는 낮에 수동 업데이트 권장(엣지는 업데이트 후 디버그포트/발행 1건 검증 필수).
+
+**2026-08-16 1차 실행 결과 실측**: 엣지/크롬(GoogleUpdater 서비스 2종)/스토어 = 적용 유지 확인. **WU AU 키(NoAutoUpdate)만 실행 몇 시간 내 삭제됨** — Windows Update Medic(WaaSMedic)이 WU 차단 정책을 자동 원복하는 것(같은 Policies 하위 ExcludeWUDrivers·EdgeUpdate 키는 생존 = 선택적 삭제). 대응 = ps1 보강: ⑤UX\Settings 일시중지 2050(FlightSettingsMaxPauseDays=9000, 설정 화면에 '일시 중지됨' 표시) ⑥`WU_NoAutoUpdate_Guard` SYSTEM 예약작업(부팅+1시간마다 reg add 재적용). 재실행 필요(대표님 bat 더블클릭+UAC). 해제 bat 도 가드 태스크/일시중지 제거 포함.
