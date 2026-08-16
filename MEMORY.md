@@ -17,4 +17,5 @@
 - [🔴 v1.8.9 글쓰기 진입=MyView 셀렉터 확정](reference_tabpublisher_entry_myview.md) — '블로그' 텍스트검색 금지(6개 중복→section.blog 이탈), [role=tab]+GoBlogWrite만, 줌아웃 후 CDP클릭 금지(_os_click_vp), 진입 시 Ctrl+0
 - [🆕🔴 발행체계 전환: jgluna용GUI v2.51→v2.59 + 서버 bizops 레이어](reference_jgluna_gui_v251_bizops.md) — 2026-08-10~11 TabPublisher→biz워커 교체. bizops_compat(워커API)+/remote 브리지+원버튼화(워커 자동시작)+브랜딩 임시저장 탭(draft run, 6블로그)+워커키 회전(타기기 401 차단, GUI 재시작 필수)+쿨다운 제거+로그렉 fix. 소스 ~/Desktop/biz-publisher(2번PC와 공유, push 전 pull). IP중복=state overlay 함정(expected-ip API로 base값 복원, ""금지). 🛑 v2.54=긴급정지 3경로(Ctrl+Shift+F9)+진입 클릭 착지실측·캡처 — 08-11 02:07 '글쓰기 감지못함'의 실체=발행 중 노트북 사용(VS Code 전면)과 클릭 충돌, 다른 PC는 발행 전용이라 무충돌
 - [🔴 신규 GUI 빌드 = 버전 bump 필수](feedback_gui_version_bump.md) — 대표님 2026-08-10 지시. APP_VERSION+exe 파일명 올리고 config/이력 파일은 보존
+- [🔁 대화 2번당 1번 SKILL.md·메모리 저장+깃헙 푸시](feedback_periodic_skill_memory_push.md) — 2026-08-16 대표님. biz-publisher SKILL.md(pull 먼저)+메모리 레포 둘 다 커밋·푸시, 한글 파일은 Edit/Write만
 - [노트북 자동업데이트 전면 차단](reference_notebook_autoupdate_block.md) — 2026-08-12 대표님 지시. 바탕화면 자동업데이트차단.bat(UAC 승격 필요, 결과=%TEMP%\noupdate_result.txt), WU정책+엣지/크롬 서비스·예약작업+스토어. 해제 bat 동봉. CRD 원격에선 Start-Process RunAs 취소됨
