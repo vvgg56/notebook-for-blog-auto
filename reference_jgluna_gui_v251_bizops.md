@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-12T03:26:55.489Z
+  modified: 2026-08-16T12:43:24.540Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -76,6 +76,12 @@ metadata:
 - **08-11 02:07 실패의 실체(entry_fail 캡처 실측)**: 실패 순간 노트북 전면 = 네이버가 아니라 **VS Code**(대표님이 채팅 입력 중인 화면까지 찍힘). 진입 자체는 정상 동작했고([블로그] 클릭 착지→[글쓰기] DOM 좌표 확보→클릭 2회), **발행 중 노트북을 다른 작업에 쓰면 OS 마우스 클릭·전면화가 사람과 충돌해 씹히는 것**이 원인. 마지막 10053=엣지 창이 닫힘. **다른 PC는 발행 전용이라 이 충돌이 없음** = "왜 이 노트북만 안 되나"의 답. 셀렉터(MyView role=tab/GoBlogWrite)는 멀쩡.
 - **v2.54**(커밋 d73d344, `jgluna용GUI_v2.54.exe` 배포폴더 복사 완료, 실기기 미검증): ①[블로그] 탭 클릭 후 [글쓰기] 링크 등장까지 **착지 실측**, 안 먹으면 캡처+8초 양보 후 재클릭(3회) ②[글쓰기] 클릭 직전 **실물 캡처**(publish_captures, 최근 60장 유지) + 에디터 탭이 8초 내 안 생기면 1회 재클릭(새 탭 하나라도 있으면 이중클릭 금지=초안오염 방지) ③os_click_vp: Edge 창 특정 실패 시 맹클릭 금지(기존엔 뚫려 있었음!) + 클릭 직전 커서 위치/덮임 재검증(사람이 커서 가져가면 포기) + **덮은 창 이름 로그**(`_fg_win_info`, psutil) + 차단 사유를 실패 보고에 전파(`_last_input_block`) ④🛑 **긴급정지 3경로**: 헤더 버튼 + 워커 가동 중 우하단 topmost 플로팅 버튼(드래그 이동·✕ 숨김) + 전역 핫키 **Ctrl+Shift+F9**. 동작=stop.flag "estop"(입력 하나하나 직전 체크에 걸림)→워커 taskkill /F→눌린 modifier/마우스버튼 **KEYUP만** 복구(worker /F로 finally 미실행 대비, 2026-07-17 ALT stuck 예방)→이후 조작 0, **엣지는 그대로 둠**(기존 [■ 중지]와 차이=엣지 정리도 안 함).
 - 교훈: 이 노트북에서 발행 돌릴 땐 **노트북을 동시에 쓰지 않거나**, 쓰다가 충돌하면 긴급정지 후 재시작. 실패 진단 1순위 = publish_captures 캡처에 뭐가 찍혔나(네이버인가 다른 앱인가).
+
+**🔴🔴 엘리트 IP 대량 만료 사고 (2026-08-16, 대표님 "발행은 안 하고 하루종일 엘리트만 봄"):**
+- **08-15 만료로 매니저 실물 목록 62→31개** (스캔 캡처 9장 판독으로 확정, Config.ini [Mainod]=옛 62개 잔존이라 부분집합 교차검증만). **루나 27명 + 브랜딩 4개(horizon37·space_blog·inbyeol-·hhanwool)의 고정IP 소멸** — 생존: haerieva(211.255.15.42)·min18ya(211.254.69.156) 등 30명. 죽은 27명: joywater2·tirososo·xkaliver123·nuri6342·skflskfl337·arbamkong·youmiggi·hoosigidane·sotye·cmskdl1256·searomin·coinnuna_·abc_wind·rudgns_2·drhong24·matketing·ppuppuppappa·whitwooo·qckszybjbb·galanode2372·starwarrz·shito·satosi0733·carjhr0710·minirock1·taixun5429·soo_bio.
+- 증상: 사라진 IP 고객마다 행 시도 22초+전체 순회 ~2분+카톡 = 발행이 하루 종일 굶음. → **v2.89**(c67dc10): walk 완주 시 OCR 전체 IP 를 `_WALK_SNAP`(30분 TTL)으로 저장, 다음 고객 IP 가 스냅샷에 없으면 **즉시 실패**(카톡 1회만). 노트북 config elite.rows 62→31 재동기화(bak_20260816_eliterows). 2번 PC 의 v2.88(늦은 전환 12초 유예+최후 8초 재확인)과 공존.
+- **미해결(대표님 액션)**: 엘리트에서 만료 IP 갱신/재발급 → 그 후 [📸 자동읽기]로 rows 갱신 + 죽은 27명+브랜딩4 에 새 IP 재배정(서버 expected-ip API, "" 금지) + 필요시 재로그인. 갱신 전까지 그 고객들은 빠른 실패로만 돎.
+- ⚠ 버전번호 공유 충돌 재발: 2번 PC 가 같은 날 v2.88 선점 — push 전 pull 로 원격 APP_VERSION 확인 후 +1 (이번에 v2.88 중복→rebase 후 v2.89 로 재명명).
 
 **🖋 [발행]↔브랜딩 임시저장 분리 확정 (2026-08-11 오후, 대표님 "발행만 눌렀는데 브랜딩이 임시저장됨"):**
 - **run #5(13:42 브랜딩 draft)의 실체**: [발행] 탓이 아님 — 아침 **08:14:38 /remote 브랜딩 탭에서 눌린 draft 잡**(command_id `draft-1786403678257`, 6블로그×1개)이 워커 오프라인으로 큐에 잠들었다가, 13:42 GUI 켜지자 `/next`의 "가장 오래된 queued 우선" 규칙으로 **먼저 claim** 된 것. 오늘 [발행] 잡은 00:55·02:03 두 건뿐(전부 루나 44개, 브랜딩 0). 브랜딩 LOGIN_EXPIRED(haerieva P46·space_blog P45)는 **애초에 그 프로필들 로그인 안 해둔 것**(대표님 확인) — 오판 아님.
