@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 770aafe0-30ba-4d26-86da-84d772df489c
-  modified: 2026-08-16T12:43:24.540Z
+  modified: 2026-08-18T05:12:07.827Z
 ---
 
 **2026-08-10 대전환: 발행봇을 TabPublisher(v1.8.x)에서 `jgluna용GUI_v2.51`(블덱스 비즈니스 워커 = biz-publisher master 27ba095, 누락 해결판)로 교체.** 대표님이 2번 PC에서 깎아온 exe(`C:\Users\장영훈\Downloads\jgluna용GUI_v2.51_배포`)를 이 노트북에서 blog.jgluna.com에 물림.
@@ -81,6 +81,7 @@ metadata:
 - **08-15 만료로 매니저 실물 목록 62→31개** (스캔 캡처 9장 판독으로 확정, Config.ini [Mainod]=옛 62개 잔존이라 부분집합 교차검증만). **루나 27명 + 브랜딩 4개(horizon37·space_blog·inbyeol-·hhanwool)의 고정IP 소멸** — 생존: haerieva(211.255.15.42)·min18ya(211.254.69.156) 등 30명. 죽은 27명: joywater2·tirososo·xkaliver123·nuri6342·skflskfl337·arbamkong·youmiggi·hoosigidane·sotye·cmskdl1256·searomin·coinnuna_·abc_wind·rudgns_2·drhong24·matketing·ppuppuppappa·whitwooo·qckszybjbb·galanode2372·starwarrz·shito·satosi0733·carjhr0710·minirock1·taixun5429·soo_bio.
 - 증상: 사라진 IP 고객마다 행 시도 22초+전체 순회 ~2분+카톡 = 발행이 하루 종일 굶음. → **v2.89**(c67dc10): walk 완주 시 OCR 전체 IP 를 `_WALK_SNAP`(30분 TTL)으로 저장, 다음 고객 IP 가 스냅샷에 없으면 **즉시 실패**(카톡 1회만). 노트북 config elite.rows 62→31 재동기화(bak_20260816_eliterows). 2번 PC 의 v2.88(늦은 전환 12초 유예+최후 8초 재확인)과 공존.
 - **미해결(대표님 액션)**: 엘리트에서 만료 IP 갱신/재발급 → 그 후 [📸 자동읽기]로 rows 갱신 + 죽은 27명+브랜딩4 에 새 IP 재배정(서버 expected-ip API, "" 금지) + 필요시 재로그인. 갱신 전까지 그 고객들은 빠른 실패로만 돎.
+- **08-18 재결제 후 상태**: 대표님 재결제+새로고침(09:52, Config.ini 61개 갱신) — **같은 IP 그대로 복귀**(죽은 27중 26 + 브랜딩 4/4, 신규 0). **arbamkong(211.41.174.206)만 미복귀**(61=62-1, 여분 IP 없음 → 1개 추가 결제 필요). 서버 재배정 불필요(IP 동일). ⚠ 단 **매니저 화면 실물 첫 10행은 여전히 옛 31개 정렬 그대로**(211.235.234.253 이 정렬 위치에 없음 — 읽기전용 캡처 실측): 복귀분이 화면 목록 미반영이거나 맨 아래 비정렬 append 추정. 확인/해결 = **v2.89 GUI 재시작 → [⚙ 설정] [📸 엘리트 순서 자동읽기]** → "스캔 N개"가 60±면 정상(rows 자동갱신), 31이면 매니저 [설정 불러오기]/재시작 후 재스캔. 자동읽기 없이도 워커 walk 폴백으로 발행은 되지만 고객당 1~3분 느림. (PrintWindow 는 VB6 매니저에서 검은화면 — 실물 확인은 화면 픽셀 ImageGrab 로.)
 - ⚠ 버전번호 공유 충돌 재발: 2번 PC 가 같은 날 v2.88 선점 — push 전 pull 로 원격 APP_VERSION 확인 후 +1 (이번에 v2.88 중복→rebase 후 v2.89 로 재명명).
 
 **🖋 [발행]↔브랜딩 임시저장 분리 확정 (2026-08-11 오후, 대표님 "발행만 눌렀는데 브랜딩이 임시저장됨"):**

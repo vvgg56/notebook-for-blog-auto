@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 3bfd2176-a887-4f9a-8ab7-d94f7758748f
-  modified: 2026-08-16T12:40:57.195Z
+  modified: 2026-08-16T17:07:55.348Z
 ---
 
 2026-08-16 세팅: 이 발행 노트북이 garonge.com 켄비야 매물 수집의 주 크롤러가 됨 (PC1은 00:20 폴백).
@@ -19,6 +19,8 @@ metadata:
 - 크롤 push는 rebase 방식이라 서버 crawl_daily(05:05~07시)와 겹쳐도 안전. 단 수동 push는 그 시간대 금지.
 - 미완(2026-08-16 기준): ExpressVPN 설치 — winget UAC가 원격 세션에서 2회 자동취소 → 바탕화면 `ExpressVPN_설치.exe`(54MB) 받아둠. 대표님이 설치+로그인해야 수동 테스트 1회 가능. 상세는 garonge repo `skill.md` 최상단.
 
-🔴 **ExpressVPN 켜지면 Claude(VS Code) API가 끊긴다** — 전체 터널이라 Claude 통신도 일본 경유가 되며 먹통. 해결 = ExpressVPN **분할 터널링**: Code.exe(`%LOCALAPPDATA%\Programs\Microsoft VS Code`)와 claude.exe(`~\.local\bin`)를 "VPN 우회"로 등록 (2026-08-16 대표님이 설정 완료). **함정: 설정 후 대상 앱(VS Code) 완전 재시작 필수** — 안 하면 기존 프로세스는 여전히 터널로 라우팅돼 그대로 먹통(실측 2회). 크롤 테스트 중 Claude가 조용해지면 이것부터 의심.
+🔴 **ExpressVPN 켜지면 Claude(VS Code) API가 끊긴다** — 전체 터널이라 Claude 통신도 일본 경유가 되며 먹통. 해결 = ExpressVPN **분할 터널링**으로 "VPN 우회" 등록. **함정 2개(전부 실측)**: ①설정 후 대상 앱 완전 재시작 필수 ②**Claude 통신의 실제 주체는 Code.exe도 `~\.local\bin\claude.exe`도 아니고 VS Code 확장 내장 바이너리** = `~\.vscode\extensions\anthropic.claude-code-<버전>-win32-x64\resources\native-binary\claude.exe` (netstat OwningProcess로 실측, 2.1.233). 이걸 등록해야 진짜로 우회됨. 확장 업데이트되면 버전 폴더가 바뀌어 재등록 필요. 실제 통신 주체 확인법 = `Get-NetTCPConnection`에서 api.anthropic.com IP의 OwningProcess.
+
+🔴 **이 노트북 크롤은 --days 3도 4h 초과** (2026-08-16 밤 실측: 22:03 시작 → 4h 타임아웃 미완주) → 태스크 인자에 `--timeout 18000`(5h) + ExecutionTimeLimit 7h로 상향(적용됨). **타임아웃으로 죽어도 크롤러가 증분 저장(upsert)하므로 작업트리에 수집분이 남는다** → 구제 = data_meta.json 갱신(3파일 count 합, source=local-kenbiya) + git add(data_kenbiya·kenbiya_all·data_meta) + "켄비야 로컬크롤 YYYY-MM-DD" 커밋 + `pull --rebase -X theirs` + push (실증 dff83edb, +37,871줄).
 
 관련: [[blog-dashboard-remote-control]], [[jgluna-gui-v251-bizops]]
