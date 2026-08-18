@@ -2,7 +2,7 @@
 - [BlogPublisher v43 노트북 배포](project_blog_publisher_notebook.md) — EXE는 ~/Downloads/BlogPublisher_v43, 2026-05-07 config.json user_data_dir 수정(PC→장영훈), 소스는 본 PC F드라이브
 - [Edge 강제 종료 금지](feedback_no_force_kill_edge.md) — Stop-Process -Force msedge → 다음 launch 때 유령 탭 복원. Sessions 파일 삭제로 청소
 - [마스터 메모리 레포](reference_master_memory_repo.md) — vvgg56/claude-memory (private), ~/Desktop/claude-memory에 클론. 발행봇 등 일반 컨텍스트는 마스터 우선 참조
-- [VS Code 확장 bypass 권한 함정](reference_vscode_extension_bypass_permissions.md) — 이 노트북=VS Code 확장. bypass는 ~/.claude/settings.json 아니라 VS Code 설정 claudeCode.allowDangerouslySkipPermissions+initialPermissionMode가 지배. 적용=창 리로드
+- [VS Code 확장 bypass + ECONNRESET 복구](reference_vscode_extension_bypass_permissions.md) — 확장 권한은 VS Code claudeCode.*가 지배. IPv6 스트림 ECONNRESET은 localhost IPv4 프록시(17654)+확장 HTTP(S)_PROXY로 복구, HKCU Run 자동시작
 - [🔴 노트북 Edge 프로필 매핑 불일치](reference_notebook_edge_profile_mapping_mismatch.md) — config profile_to_blog ≠ 노트북 실제 로그인. Profile 1=gmm0301(joywater2 아님). 발행 전 실제 매핑 확인 필수(_identify_profile.py)
 - [🔴🔴 VPN 없으면 네이버 로그인 금지](feedback_vpn_required_before_naver_login.md) — 보호조치 진짜 원인=맨 IP 발행. _launch_blog 게이트(v1.1.24), 체크박스보다 우선, vpn_id 없으면 엣지 안 엶
 - [blog.jgluna 대시보드 원격제어 + 서버/divergence](reference_blog_dashboard_remote_control.md) — vvgg56/blog-dashboard, 서버 3.38.22.7(키 ~/.ssh/Lightsail...pem), /remote 원격발행, repo↔서버 어긋남(전체배포 금지·patch만)

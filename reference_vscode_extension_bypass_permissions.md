@@ -28,3 +28,30 @@ metadata:
 4. 진짜 레버 = VS Code `settings.json` 의 위 2개 `claudeCode.*` 키 + 창 리로드.
 
 관련 [[settings-local-default-mode]] 와는 다른 축 — 그건 CLI 의 project-local override, 이건 확장 vs CLI 차이.
+
+## ECONNRESET / `Clauding…` 고착 (2026-08-18 복구)
+
+**실측 증상:** Claude Code 2.1.234가 `/v1/messages` 첫 청크를 받은 직후 `ECONNRESET`을 반복했다.
+로그상 10회 스트리밍 재시도와 non-streaming 폴백까지 모두 실패했고, UI는 `Clauding…`에 고착했다.
+`curl.exe -I https://api.anthropic.com`은 정상이고 로그의 `isNetworkDown=false`였으므로 인증/전체 인터넷
+장애가 아니었다. `claude.exe` TCP가 전부 IPv6 `2607:6bc0::10:443`인 것을 확인했다.
+
+**확정 대조:**
+- 직접 연결: 답변 `CONNECTION_OK`까지 수신 후 스트림 종료에서 exit 1 + ECONNRESET.
+- localhost IPv4 프록시 연결: `PROXY_OK`, 이후 3회 연속 OK, 모두 exit 0.
+
+**현재 영구 복구 구성:**
+- 프록시: `C:\Users\장영훈\.claude\claude_ipv4_proxy.py`, `127.0.0.1:17654`.
+- VS Code 사용자 설정 `claudeCode.environmentVariables`: `HTTPS_PROXY`와 `HTTP_PROXY`를
+  `http://127.0.0.1:17654`로 지정.
+- 로그인 자동시작: `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`의
+  `ClaudeCodeIPv4Proxy` (`pyw.exe -3 ...claude_ipv4_proxy.py`).
+- 보안 범위: localhost만 listen, 허용된 Anthropic/Claude/Statsig/Sentry 호스트의 443 CONNECT만,
+  upstream DNS/socket만 IPv4 강제. TLS 해독/중간자 없음.
+
+**재발 점검:**
+1. `Get-NetTCPConnection -LocalPort 17654 -State Listen`으로 프록시 확인.
+2. VS Code settings.json의 두 proxy 환경변수 확인.
+3. 프록시가 없으면 `pyw.exe -3 ~/.claude/claude_ipv4_proxy.py` 재실행.
+4. 이전 UI가 계속 돌면 해당 `claude.exe` 자식만 종료하고 새 메시지. VS Code 전체/확장호스트 강제종료는
+   Codex 세션까지 끊으므로 금지.
