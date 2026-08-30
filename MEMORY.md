@@ -20,3 +20,6 @@
 - [🔁 대화 2번당 1번 SKILL.md·메모리 저장+깃헙 푸시](feedback_periodic_skill_memory_push.md) — 2026-08-16 대표님. biz-publisher SKILL.md(pull 먼저)+메모리 레포 둘 다 커밋·푸시, 한글 파일은 Edit/Write만
 - [노트북 자동업데이트 전면 차단](reference_notebook_autoupdate_block.md) — 2026-08-12 대표님 지시. 바탕화면 자동업데이트차단.bat(UAC 승격 필요, 결과=%TEMP%\noupdate_result.txt), WU정책+엣지/크롬 서비스·예약작업+스토어. 해제 bat 동봉. CRD 원격에선 Start-Process RunAs 취소됨
 - [🆕 가론지 켄비야 주 크롤러 세팅](reference_notebook_kenbiya_crawl_setup.md) — 2026-08-16. C:\workspace\garonge, 04:00 GarongeKenbiyaDaily(가드: 발행 감지시 대기·양보=켄비야 후순위)+워치독 pythonw. Python 3.12 full path 필수. 미완=ExpressVPN 설치(바탕화면 exe)+로그인+테스트 1회
+- [🔴 GUI 사라짐=Defender 오탐 해결+3중 백업](reference_gui_defender_fp_backup.md) — 2026-08-24. 제외 4경로(이벤트 5007 검증), Documents\gui 백업(삭제금지), GuiBackupSync 매시간. 구 defender_exclude.ps1은 2번PC 경로라 이 노트북에선 헛등록
+- [고시원 지점불일치 패치 대기 + 태그 미구현](reference_gosiwon_mismatch_tags.md) — 2026-08-24. 원인=제목/본문지점 독립선택(main.py 4774·4954), 패치 /tmp 대기, 불량원고 4건 미발행. 태그=발행봇 미구현(enter_tags 설계 有). SSH 연타=IP차단 주의
+- [🔓 브랜딩 행 고정IP 해제 404 + 8/24~28 실패사유](reference_jgluna_branding_expected_ip_404.md) — 2026-08-30. 원인=expected-ip/first-login 이 customers.json 만 검색(브랜딩 2001~=레지스트리). 패치 v2 리뷰 통과·**배포 대기**(바탕화면 jgluna_bizops_patch_20260830, 분류기가 서버 쓰기 차단). 사진실패=IMAGE_FAIL 간헐(당일 전원 재성공)+크롬로그인 0/43, 기타=엘리트 IP 만료 3명(arbamkong·ppuppuppappa·blogno1)

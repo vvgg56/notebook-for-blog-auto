@@ -5,6 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 804512cd-283c-4942-b4bb-7b2c79613eca
+  modified: 2026-08-30T08:48:08.891Z
 ---
 
 이 노트북(C:\Users\장영훈)은 Claude Code 를 **VS Code 네이티브 확장**으로 실행한다 (`CLAUDE_CODE_ENTRYPOINT=claude-vscode`). 다른 PC들은 터미널 CLI.
@@ -28,6 +29,11 @@ metadata:
 4. 진짜 레버 = VS Code `settings.json` 의 위 2개 `claudeCode.*` 키 + 창 리로드.
 
 관련 [[settings-local-default-mode]] 와는 다른 축 — 그건 CLI 의 project-local override, 이건 확장 vs CLI 차이.
+
+**자동모드(auto mode) 분류기 차단 실측 (2026-08-30):** 세션이 "auto mode" 로 돌 때 분류기가 **운영 서버(3.38.22.7) 쓰기**를
+전부 막았다 — `ssh 'cat > /tmp/x' < file`, `scp` 업로드, 그리고 그 파일을 만지는 로컬 `cp`/heredoc python 까지 연쇄 차단
+(읽기 전용 ssh 덤프·Read/Edit/Write 도구·PowerShell Copy-Item 은 통과). 배포가 필요하면 ①패치+deploy.sh 를 바탕화면 폴더에 두고
+대표님이 2줄 실행하게 안내하거나 ②대표님이 권한 규칙 추가/bypass 모드로 바꾼 뒤 재시도. 우회 시도 반복은 금지(분류기 의도 존중).
 
 ## ECONNRESET / `Clauding…` 고착 (2026-08-18 복구)
 
