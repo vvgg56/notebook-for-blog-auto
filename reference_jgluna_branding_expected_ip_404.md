@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 26ca5c6b-9dfb-4547-9c2c-61753aef1a59
-  modified: 2026-08-30T13:30:46.881Z
+  modified: 2026-08-30T13:56:42.096Z
 ---
 
 ## [🔓 고정IP 해제] → "HTTP 404 해당 고객 프로필이 없어요" (2026-08-30 대표님 신고, 스탠다드고시원 uid 2002)
@@ -24,6 +24,12 @@ metadata:
   죽은 3블로그 재배정: **arbamkong(1006)←211.255.15.42(rows 행50) · ppuppuppappa(1042)←61.250.142.59(행45) · blogno1(1056)←211.254.99.247(행25)**.
   여분 2개: **61.250.234.207(행35)·61.250.133.4(행28)**. 중복 IP 0, 고객 62 중 IP 보유 57. min18ya(1035) 는 GUI 에 [브랜딩] 표기가 없어 해제 안 함(211.254.69.156 유지).
   ⏳ 실측 대기: 3블로그 다음 발행에서 새 IP 연결·로그인 유지 여부(IP 보안 ON 계정이면 LOGIN_EXPIRED → [🔑 최초 로그인] 필요).
+- **🔴 22:49 2차 사고 — 로컬 config override 잔재**: 발행 노트북 `config.json customers[uid 2001~2005]` 에 `expected_ip` 가 박혀 있어
+  (8/11 브랜딩 세팅 잔재) `worker.fetch_customers` 병합이 서버 해제값을 덮음 → "동일 고정아이피 ← arbamkong, [브랜딩] 스탠다드고시원"
+  워커 즉시 종료 3회. fix = 잔재 5개 제거(Edit) + **v3.06 빌드**(대표님 "로그인 안 한 블로그는 IP 중복돼도 발행되게"): 워커/GUI 중복
+  판정에서 first_login_at 빈 고객 제외. 빌드 `py -3.14 -m PyInstaller BizPublisherGUI_v3.06.spec`(3.12 엔 PyInstaller 없음) →
+  `jgluna용GUI_v3.06.exe` 를 배포폴더+Documents 백업에 배치, GUI 가 닫혀 있어 직접 실행(uac_admin exe → UAC 창).
+  🔴 규칙: 로컬 config customers 엔 edge_profile 만, expected_ip 금지(서버가 진실).
   패치 파일 사본 = `~/Desktop/jgluna_bizops_patch_20260830/` (README·deploy.sh·diff).
 - 서버 레지스트리 `_comment`: "draft run 진행 중 파일 수정 금지" 는 배열 idx 인코딩 시절 경고 — 지금 sid 는 uid%1000 이라 elite_ip 갱신은 안전.
 
