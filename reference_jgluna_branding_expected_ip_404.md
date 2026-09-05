@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 26ca5c6b-9dfb-4547-9c2c-61753aef1a59
-  modified: 2026-09-03T09:30:00.286Z
+  modified: 2026-09-05T05:52:47.030Z
 ---
 
 ## [🔓 고정IP 해제] → "HTTP 404 해당 고객 프로필이 없어요" (2026-08-30 대표님 신고, 스탠다드고시원 uid 2002)
@@ -51,5 +51,16 @@ metadata:
   **여전히 0/43** — 폴백 한 번도 못 씀. 제안(미실행, 분류기가 서버쓰기 차단): ①1005 고정IP 를 여분 61.250.234.207(행35)로
   교체(IP 궁합 가설 판별, 8/30 3명 교체 때 로그인 유지 실증) ②GUI [🌐 크롬 로그인] 에 1005 등 상습군 로그인(브라우저 가설
   판별+자동 이관). 둘 다 실패하면 계정 단위 업로드 제한 의심.
+- **🔴 9/5 새벽 발행 전멸(46실패/0성공) 원인 = Windows '알림 제안' 토스트**(ShellExperienceHost, 삼성 설정 제안 —
+  버튼형이라 자동으로 안 사라짐)가 04:27부터 **발행 버튼 좌표(1426,639)를 계속 덮음** → v2.54 덮임 가드가 클릭 보류
+  (정상 동작) → 3회 재시도 전부 실패 → 'URL 미전환' 실패·글은 임시저장 보관. 덮임 감지 112회. 9/4 는 전멸 아님(43성공/21실패).
+  **fix(2026-09-05, read-back 검증 완료)**: HKCU 레지스트리 — PushNotifications `ToastEnabled=0`(토스트 전면 OFF) +
+  ContentDeliveryManager `SubscribedContent-338389Enabled=0`·`SoftLandingEnabled=0`(팁/제안) + Notifications\Settings 의
+  삼성설정·삼성Welcome·ActionCenter.SmartOptOut·PlatformExperienceHelper `Enabled=0`. ⏳ 실측 = 다음 발행 로그 '덮고 있음' 0건
+  (레지스트리가 로그온 세션에 안 먹으면 재부팅 1회 필요). 재발 시 워커측 후보 = CRD 배너처럼 ShellExperienceHost 토스트 SW_HIDE.
+- **크롬 이관 드디어 가동(9/4~, 누군가 크롬 로그인 해줌)**: 이관 8건 중 9/4 성공 2(n007·carjhr0710)/실패 2(nuri6342·
+  galanode2372 = **엣지·크롬 둘 다 이미지 실패 → 브라우저 아닌 IP/계정 축**), 9/5 3건은 토스트에 덮여 판정 불가.
+  **skflskfl337 은 9/5 크롬 이관에서 사진 통과 후 발행 클릭만 토스트에 막힘 + 9/5 13:34 엣지에서도 사진 8/8 정상** —
+  사진 문제는 풀렸고 남은 건 토스트뿐이었음. 실패글 임시저장 중복 누적 주의(ekekdlr30 저장수 21 등 — 수동 정리 필요할 수 있음).
 
 관련: [[reference-jgluna-gui-v251-bizops]] [[reference-vscode-extension-bypass-permissions]]
