@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 26ca5c6b-9dfb-4547-9c2c-61753aef1a59
-  modified: 2026-08-31T04:22:36.882Z
+  modified: 2026-09-07T08:22:43.190Z
 ---
 
 **직원 보고(2026-08-31, /remote 발행 후) "발행봇이 글자를 계속 빼먹는다" 규명 결과** — 발행 노트북 run 39·40 의
@@ -26,3 +26,16 @@ metadata:
    IMAGE_FAIL 은 8/31 낮 run 에도 8건 재발(크롬 로그인 여전히 0명 — [[reference-jgluna-branding-expected-ip-404]] 참조).
 5. 대조 스크립트 재사용법: 서버 bizops_articles/<sid>.json ↔ `m.blog.naver.com/<blog>/<logNo>` (se-main-container 텍스트,
    `<사진N>`·`{{마커}}` 제거, 공백 squash 후 SequenceMatcher opcodes 의 delete/replace 만 보면 됨).
+
+## 9/7 재신고("한 글자씩 잘림 아직도") → 서버측 수리 레이어 (2026-09-07)
+- **실물 sotye 224403625726**: '우선입니.'(다 탈락, `{{/color}}` 직전)·목차 '가이'↔본문 '가격이'·해시태그 끝 ' calc' —
+  **셋 다 원고(12900090.json)에 이미 있음, 발행글은 원고와 100% 일치** = 8/31 결론 재확인(생성이 범인, 봇 무죄).
+  write.jgluna 생성 = 프롬프트로 {{bold}}/{{color}} 마커까지 통짜 생성(live main.py, 마커 짝 검사는 있으나 음절 탈락 검사는 없음).
+- **fix = bizops_compat `_repair_generation`(서빙 전 수리, 배포 대기)**: ①어미 '…니.'→'…니다.'(입·십은 앞 한글 필수,
+  습/합/됩/랍 포함, 마커 끼임 변형 처리) ②목차↔본문 소제목 — **번호 같고** fuzzy≥0.7 이고 **부분수열+1~2자 차이**일 때만
+  통일(중복음절 쪽 배제 — '가격격이'는 짧은 쪽 승) ③해시태그 꼬리 **소문자** 낱말 토큰만 제거(KRX/ETF 보호).
+  검증 = 실원고 35건(파손 5건만 수리·30건 무변경·멱등) + 적대 refuter 반례 6종 전부 무변경. 스니펫 = 세션 스크래치
+  repair_snippet.py. 삽입 2곳 = `_generate_article` 의 `_sanitize_body` 직후 + `bz_article` 서빙(캐시 파일도 치유·재저장).
+- ⚠ 9/7 sshd 회선 차단(kex reset — 실수기록 패턴)으로 배포 대기. 서버 bizops_compat 는 8/30 이후 타 세션 변경 가능성 →
+  배포 전 현재 파일 새로 받아 그 위에 삽입(해시 대조). 발행돼 버린 sotye 글의 '우선입니.' 등은 블로그에서 수동 수정 필요.
+- 토스트(알림) fix 실측 완료: 9/6~7 '덮고 있음' 0건·발행 81건 정상.
