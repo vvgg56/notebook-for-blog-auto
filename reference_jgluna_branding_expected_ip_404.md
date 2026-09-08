@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 26ca5c6b-9dfb-4547-9c2c-61753aef1a59
-  modified: 2026-09-05T05:52:47.030Z
+  modified: 2026-09-08T07:54:24.002Z
 ---
 
 ## [🔓 고정IP 해제] → "HTTP 404 해당 고객 프로필이 없어요" (2026-08-30 대표님 신고, 스탠다드고시원 uid 2002)
@@ -58,6 +58,11 @@ metadata:
   ContentDeliveryManager `SubscribedContent-338389Enabled=0`·`SoftLandingEnabled=0`(팁/제안) + Notifications\Settings 의
   삼성설정·삼성Welcome·ActionCenter.SmartOptOut·PlatformExperienceHelper `Enabled=0`. ⏳ 실측 = 다음 발행 로그 '덮고 있음' 0건
   (레지스트리가 로그온 세션에 안 먹으면 재부팅 1회 필요). 재발 시 워커측 후보 = CRD 배너처럼 ShellExperienceHost 토스트 SW_HIDE.
+- **🖼 v3.08(2026-09-08 대표님 지시)**: "'존재하지 않는 이미지' 떠도 누락 안 됨(직원 실측) — 이미지 다 올리고 그대로 발행"
+  → 첫사진 검증·마무리 게이트의 깨짐 감지를 **기록만 하고 발행 진행**(기본 ON, `ignore_broken_image=false` 로 옛 동작
+  복원). 재시도 사다리·크롬 이관·IMAGE_FAIL 은 그 스위치 뒤로. 업로드 미완결(src=blob/data) 게이트는 유지. refuter 차단 0.
+  jgluna-publisher 로컬 커밋 d801c8b(푸시=repo 생성 대기), exe = jgluna용GUI_v3.08.exe 배치 완료(v3.07 이 떠 있어 교체는
+  대표님 2클릭: v3.07 닫기 → v3.08 실행). ⚠ 이 지시로 IMAGE_FAIL 실패군은 대부분 사라질 예정 — 크롬 로그인 필요성도 급감.
 - **크롬 이관 드디어 가동(9/4~, 누군가 크롬 로그인 해줌)**: 이관 8건 중 9/4 성공 2(n007·carjhr0710)/실패 2(nuri6342·
   galanode2372 = **엣지·크롬 둘 다 이미지 실패 → 브라우저 아닌 IP/계정 축**), 9/5 3건은 토스트에 덮여 판정 불가.
   **skflskfl337 은 9/5 크롬 이관에서 사진 통과 후 발행 클릭만 토스트에 막힘 + 9/5 13:34 엣지에서도 사진 8/8 정상** —
